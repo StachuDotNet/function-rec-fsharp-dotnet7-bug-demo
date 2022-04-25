@@ -1,7 +1,4 @@
-﻿open Ply
-open FSharp.Control.Tasks.Affine.Unsafe
-
-let dropWhileSimple condition list =
+﻿let dropWhileWithMatch condition list =
   let rec f (l : List<int>) : List<int> =
     match l with
     | [] -> []
@@ -12,49 +9,22 @@ let dropWhileSimple condition list =
 
   f list
 
-let dropWhileWithPlyAndMatch condition list =
-  uply {
-    let rec f (l : List<int>) : Ply<List<int>> =
-      match l with
-      | [] -> Ply []
-      | head :: tail ->
-        uply {
-          match condition head with
-          | true -> return! f tail
-          | false -> return head :: tail
-        }
+let dropWhileWithFunction condition list =
+  let rec f : List<int> -> List<int> =
+    function
+    | [] -> []
+    | head :: tail ->
+      match condition head with
+      | true -> f tail
+      | false -> head :: tail
 
-    let! result = f list
-    return result
-  }
-
-let dropWhileWithPlyAndFunction condition list =
-  uply {
-    let rec f : List<int> -> Ply<List<int>> =
-      function
-      | [] -> Ply []
-      | head :: tail ->
-        uply {
-          match condition head with
-          | true -> return! f tail
-          | false -> return head :: tail
-        }
-
-    let! result = f list
-    return result
-  }
-
-printfn "Hello from F#"
+  f list
 
 let list = [1; 2; 3]
 let condition n = n < 3
 
-// simple usage:
-let simpleResult = dropWhileSimple condition list
-printfn "Simple version: %A" simpleResult
+let matchResult = dropWhileWithMatch condition list
+printfn "Match, no Ply: %A" matchResult
 
-let matchPlyResult = (dropWhileWithPlyAndMatch condition list |> Ply.TplPrimitives.runPlyAsTask).Result
-printfn "Ply version with match: %A" matchPlyResult
-
-let functionPlyResult = (dropWhileWithPlyAndFunction condition list |> Ply.TplPrimitives.runPlyAsTask).Result
-printfn "Ply version with function: %A" matchPlyResult
+let functionResult = dropWhileWithFunction condition list
+printfn "Function, no Ply: %A" functionResult
