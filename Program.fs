@@ -1,4 +1,7 @@
-﻿let dropWhileWithMatch condition list =
+﻿let list = [1; 2; 3]
+let condition n = n < 3
+
+let dropWhileWithMatch condition list =
   let rec f (l : List<int>) : List<int> =
     match l with
     | [] -> []
@@ -20,11 +23,18 @@ let dropWhileWithFunction condition list =
 
   f list
 
-let list = [1; 2; 3]
-let condition n = n < 3
 
+// this runs fine:
 let matchResult = dropWhileWithMatch condition list
 printfn "Match, no Ply: %A" matchResult
 
+
+// and this results in a null reference exception
 let functionResult = dropWhileWithFunction condition list
 printfn "Function, no Ply: %A" functionResult
+(*
+  Unhandled exception. System.NullReferenceException: Object reference not set to an instance of an object.
+   at Program.f@14-1.Invoke(FSharpList`1 _arg1) in /workspaces/ply-function-rec-fsharp-dotnet7-bug-demo/Program.fs:line 18
+   at Program.dropWhileWithFunction(FSharpFunc`2 condition, FSharpList`1 list) in /workspaces/ply-function-rec-fsharp-dotnet7-bug-demo/Program.fs:line 21
+   at <StartupCode$function-rec-fsharp-dotnet7-bug-demo>.$Program.main@() in /workspaces/ply-function-rec-fsharp-dotnet7-bug-demo/Program.fs:line 29
+*)
