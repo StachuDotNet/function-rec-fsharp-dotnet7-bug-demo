@@ -1,0 +1,28 @@
+{
+	"name": "dark-builder",
+
+	"build": {
+	  "context": "..",
+	  "dockerfile": "./Dockerfile"
+	},
+
+	// Set *default* container specific settings.json values on container create.
+	"settings": {
+	  "terminal.integrated.defaultProfile.linux": "bash",
+	  "FSharp.dotNetRoot": "/usr/share/dotnet",
+	  "FSharp.useSdkScripts": true,
+	  "FSharp.workspaceModePeekDeepLevel": 5,
+	  "remote.containers.cacheVolume": true,
+	  "remote.containers.workspaceMountConsistency": "delegated",
+	  "editor.tabSize": 2,
+	  "files.trimTrailingWhitespace": true,
+	  "python.formatting.provider": "yapf"
+	},
+
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+	  "ionide.ionide-fsharp@5.10.1",
+	  "ms-azuretools.vscode-docker",
+	  "editorconfig.editorconfig"
+	]
+}
